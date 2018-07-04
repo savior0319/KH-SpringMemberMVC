@@ -376,3 +376,20 @@ Servlet Container에서 HTTP 프로토콜을 통해 들어오는 모든 요청�
 ※ \src\main\webapp\resources 는 CSS, JS를 넣는 곳
 
 -> /resources로 접근
+
+※ Web.xml에 인코딩 추가
+
+	<!-- 필터를 통해 인코딩 작업 -->
+	<filter>
+		<filter-name>characterEncoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>characterEncoding</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
