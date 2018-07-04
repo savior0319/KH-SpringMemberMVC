@@ -3,12 +3,28 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-	<!-- add Welcome File -->
+	<!-- Add Welcome File -->
 	<welcome-file-list>
 		<welcome-file>
 	index.jsp
 	</welcome-file>
 	</welcome-file-list>
+
+	<!-- 필터를 통해 인코딩 작업 -->
+	<filter>
+		<filter-name>characterEncoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>characterEncoding</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+
 
 	<!-- The definition of the Root Spring Container shared by all Servlets 
 		and Filters -->
@@ -35,7 +51,7 @@
 
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 
 </web-app>

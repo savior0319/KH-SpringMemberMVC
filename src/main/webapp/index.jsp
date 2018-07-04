@@ -4,11 +4,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Insert title here</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SpringMemberMVC 메인 페이지</title>
 </head>
 <body>
-	<h1>테스트 페이지</h1>
+	<h1>로그인</h1>
+	<hr>
+	<form action="/login.do" method="POST" accept-charset="utf-8">
+		아이디 <input type="text" name="userId" placeholder="아이디 입력"><br>
+		비밀번호 <input type="password" name="userPw" placeholder="비밀번호 입력"><br>
+		<button type="submit">로그인</button>
+	</form>
 </body>
 </html>
