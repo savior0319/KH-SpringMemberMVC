@@ -30,21 +30,24 @@ public class MemberControllerImpl implements MemberController {
 
 		// 2. 비즈니스 로직
 		MemberVO m = memberService.selectOneMember(mv);
-		
+
 		// 로그인 세션
 		HttpSession session = request.getSession(true);
 
 		// 3. viewName 리턴
 		// viewName을 처 할 때 주의할 점
 		// viewName을 dispatcherServlet에게 돌려주고 자동으로
-		// 처리 되도록 만들지만 DispatcherServlet에서는 
+		// 처리 되도록 만들지만 DispatcherServlet에서는
 		// 무조건 forward 방식을 사용함
 		if (m != null) {
 			session.setAttribute("member", m);
+			// session.setAttribute("loc", "member/loginSuccess");
 			return "member/loginSuccess";
 		} else {
+			// session.setAttribute("loc", "member/loginFailed");
 			return "member/loginFailed";
 		}
+		// return "redirect;/location.do";
 	}
 
 	@Override
