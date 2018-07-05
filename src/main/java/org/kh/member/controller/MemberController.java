@@ -7,4 +7,6 @@ public interface MemberController {
 	String insertMember();
 
 	String selectOneMember(HttpServletRequest request, String userId, String userPw);
+
+	String logout(HttpServletRequest request);
 }

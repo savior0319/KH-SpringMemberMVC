@@ -32,7 +32,7 @@ public class MemberControllerImpl implements MemberController {
 		MemberVO m = memberService.selectOneMember(mv);
 
 		// 로그인 세션
-		HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession();
 
 		// 3. viewName 리턴
 		// viewName을 처 할 때 주의할 점
@@ -54,6 +54,20 @@ public class MemberControllerImpl implements MemberController {
 	@RequestMapping(value = "/enroll.do")
 	public String insertMember() {
 		return null;
+	}
+
+	@Override
+	@RequestMapping(value = "/logout.do")
+	public String logout(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		MemberVO mv = (MemberVO) session.getAttribute("member");
+
+		if (mv != null) {
+			session.invalidate();
+			return "member/logoutSuccess";
+		} else {
+			return "member/logutFail";
+		}
 	}
 
 }
