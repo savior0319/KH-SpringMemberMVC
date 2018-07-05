@@ -1,54 +1,39 @@
 package org.kh.member.model.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 import org.kh.member.model.vo.MemberVO;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository("memberDAO")
 public class MemberDAOImpl implements MemberDAO {
 
-	private PreparedStatement pstmt = null;
-	private ResultSet rs = null;
-
 	public MemberDAOImpl() {
 	}
 
 	@Override
-	public MemberVO selectOneMember(Connection conn, MemberVO mv) {
-
-		MemberVO m = null;
+	public MemberVO selectOneMember(JdbcTemplate jdbc, MemberVO mv) {
 
 		String query = "SELECT * FROM MEMBER WHERE USER_ID = ? AND USER_PWD = ?";
 
-		try {
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, mv.getUserId());
-			pstmt.setString(2, mv.getUserPw());
+		// query 메소드는 인자값 2개 혹은 3개
+		// 2개 -> query, RowMapper
+		// 3개 -> query, query parameter, RowMapper
+		// query : SQL 구문
+		// RowMapper : 작동한 쿼리문에 대한 결과값을 처리하는것이 명시된 객체
+		// query parameter : 쿼리문에 ? 가 있을 경우에 사용되는 인자 값
 
-			rs = pstmt.executeQuery();
+		// query parameter (Object 배열)
+		Object[] params = { mv.getUserId(), mv.getUserPw() };
 
-			if (rs.next()) {
-				m = new MemberVO();
-				m.setUserId(rs.getString("USER_ID"));
-				m.setUserPw(rs.getString("USER_PWD"));
-				m.setUserName(rs.getString("USER_NAME"));
-				m.setPhone(rs.getString("USER_PHONE"));
-			}
+		List<Object> list = jdbc.query(query, params, new MemberRowMapper());
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				rs.close();
-				pstmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		if (!list.isEmpty()) {
+			return (MemberVO) list.get(0);
+		} else {
+			return null;
 		}
-		return m;
+
 	}
 }
