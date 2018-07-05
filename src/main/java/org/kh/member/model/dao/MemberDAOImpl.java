@@ -1,5 +1,6 @@
 package org.kh.member.model.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kh.member.model.vo.MemberVO;
@@ -35,5 +36,49 @@ public class MemberDAOImpl implements MemberDAO {
 			return null;
 		}
 
+	}
+
+	@Override
+	public int updateMember(JdbcTemplate jdbc, MemberVO mv) {
+
+		String query = "UPDATE MEMBER SET USER_PWD = ?, USER_PHONE = ? WHERE USER_ID =?";
+
+		Object[] params = { mv.getUserPw(), mv.getPhone(), mv.getUserId() };
+		int result = jdbc.update(query, params);
+
+		return result;
+	}
+
+	@Override
+	public int insertMember(JdbcTemplate jdbc, MemberVO mv) {
+
+		String query = "INSERT INTO MEMBER VALUES(?, ?, ?, ?)";
+
+		Object[] params = { mv.getUserId(), mv.getUserPw(), mv.getUserName(), mv.getPhone() };
+
+		int result = jdbc.update(query, params);
+
+		return result;
+	}
+
+	@Override
+	public int withdrawMember(JdbcTemplate jdbc, String userId) {
+
+		String query = "DELETE FROM MEMBER WHERE USER_ID = ?";
+
+		Object[] params = { userId };
+
+		int result = jdbc.update(query, params);
+
+		return result;
+	}
+
+	@Override
+	public List<Object> allMember(JdbcTemplate jdbc) {
+
+		String query = "SELECT * FROM MEMBER";
+		List<Object> list = jdbc.query(query, new MemberAllRowMapper());
+
+		return list;
 	}
 }

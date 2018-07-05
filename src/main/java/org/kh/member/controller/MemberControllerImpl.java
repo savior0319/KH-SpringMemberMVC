@@ -1,5 +1,7 @@
 package org.kh.member.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MemberControllerImpl implements MemberController {
@@ -47,13 +50,7 @@ public class MemberControllerImpl implements MemberController {
 			// session.setAttribute("loc", "member/loginFailed");
 			return "member/loginFailed";
 		}
-		// return "redirect;/location.do";
-	}
-
-	@Override
-	@RequestMapping(value = "/enroll.do")
-	public String insertMember() {
-		return null;
+		// return "redirect:/location.do";
 	}
 
 	@Override
@@ -64,10 +61,103 @@ public class MemberControllerImpl implements MemberController {
 
 		if (mv != null) {
 			session.invalidate();
-			return "member/logoutSuccess";
+			// viewResolver 없이 직접 경로로 이동 (redirect:/xxx.jsp);
+			// webapp에 있는건 가능 webapp/WEB-INF에 있는건 반드시 viewResolver를 통해 접근해야 함
+			return "redirect:/index.jsp";
+			// return "member/logoutSuccess";
 		} else {
 			return "member/logutFail";
 		}
 	}
 
+	@Override
+	@RequestMapping(value = "/myinfo.do")
+	public Object myInfo(HttpSession session) {
+
+		MemberVO mv = (MemberVO) session.getAttribute("member");
+		MemberVO m = memberService.selectOneMember(mv);
+		ModelAndView view = new ModelAndView();
+
+		if (m != null) {
+			view.addObject("modelMember", m);
+			view.setViewName("member/myInfo");
+			return view;
+		} else {
+			view.setViewName("member/myInfoFail");
+			return view;
+		}
+	}
+
+	@Override
+	@RequestMapping(value = "/mupdate.do")
+	public String memberUpdate(MemberVO mv, HttpSession session) {
+
+		// System.out.println(mv.getUserId());
+		// System.out.println(mv.getUserPw());
+		// System.out.println(mv.getUserName());
+		// System.out.println(mv.getPhone());
+
+		int result = memberService.updateMember(mv);
+
+		if (result >= 1) {
+			session.setAttribute("member", mv);
+			/* return "redirect:/myinfo.do"; */
+			return "member/memberUpdateSuccess";
+		} else {
+			return "member/memberUpdateFail";
+		}
+	}
+
+	@Override
+	@RequestMapping(value = "/signup.do")
+	public String insertMember(MemberVO mv) {
+
+		int result = memberService.insertMember(mv);
+
+		if (result >= 1) {
+			return "redirect:/";
+		} else {
+			return "member/memberUpdateFail";
+		}
+	}
+
+	@Override
+	@RequestMapping(value = "/signupredirect.do")
+	public String signupRedirect() {
+		return "member/signup";
+	}
+
+	@Override
+	@RequestMapping(value = "/withdraw.do")
+	public String withdrawMember(HttpSession session) {
+
+		MemberVO vo = (MemberVO) session.getAttribute("member");
+
+		String userId = vo.getUserId();
+
+		System.out.println(userId);
+
+		int result = memberService.withdrawMember(userId);
+
+		if (result >= 1) {
+			session.invalidate();
+			return "redirect:/";
+		} else {
+			return "member/memberUpdateFail";
+		}
+	}
+
+	@Override
+	@RequestMapping(value = "/allmember.do")
+	public Object allMember() {
+
+		List<Object> list = (List<Object>) memberService.allMember();
+
+		for (Object m : list) {
+			System.out.println(m);
+		}
+
+		return null;
+
+	}
 }

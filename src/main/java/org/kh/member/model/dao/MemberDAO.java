@@ -5,8 +5,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public interface MemberDAO {
 
-
 	MemberVO selectOneMember(JdbcTemplate jdbc, MemberVO mv);
 
+	int updateMember(JdbcTemplate jdbcTemplate, MemberVO mv);
+
+	int insertMember(JdbcTemplate jdbcTemplate, MemberVO mv);
+
+	int withdrawMember(JdbcTemplate jdbc, String userId);
+
+	Object allMember(JdbcTemplate jdbcTemplate);
 
 }
